@@ -61,6 +61,13 @@ public class PokedexService {
         return toPokedexResponseDto(saved);
     }
 
+    public void deleteFavorite(String id) {
+        repository.findById(id)
+                .orElseThrow(() -> new CollectionEntryNotFoundException("Favorite Pokemon not found: " + id));
+
+        repository.deleteById(id);
+    }
+
     private PokedexResponseDto toPokedexResponseDto(Pokemon source) {
         return PokedexResponseDto.builder()
                 .pokemonId(source.id())
@@ -83,12 +90,5 @@ public class PokedexService {
                 .weight(source.weight())
                 .types(source.types())
                 .build();
-    }
-
-    public void deleteFavorite(String id) {
-        repository.findById(id)
-                .orElseThrow(() -> new CollectionEntryNotFoundException("Favorite Pokemon not found: " + id));
-
-        repository.deleteById(id);
     }
 }
