@@ -2,10 +2,13 @@ package org.example.pokedexservice.service;
 
 import org.example.pokedexservice.dto.request.FavoritePokemonRequestDto;
 import org.example.pokedexservice.dto.response.PokedexResponseDto;
+import org.example.pokedexservice.exception.CollectionEntryNotFoundException;
 import org.example.pokedexservice.model.FavoritePokemon;
 import org.example.pokedexservice.model.Pokemon;
 import org.example.pokedexservice.repository.FavoritePokemonRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PokedexService {
@@ -24,6 +27,19 @@ public class PokedexService {
     public PokedexResponseDto getPokemonByName(String name) {
         Pokemon pokemon = pokeApiService.getPokemonByName(name);
         return toPokedexResponseDto(pokemon);
+    }
+
+    public List<PokedexResponseDto> getFavorites() {
+        return repository.findAll().stream()
+                .map(this::toPokedexResponseDto)
+                .toList();
+    }
+
+    public PokedexResponseDto getFavoriteById(String id) {
+        FavoritePokemon favorite = repository.findById(id)
+                .orElseThrow(() -> new CollectionEntryNotFoundException("Favorite Pokemon not found: " + id));
+
+        return toPokedexResponseDto(favorite);
     }
 
     public PokedexResponseDto addFavorite(FavoritePokemonRequestDto favoritePokemonRequestDto) {
@@ -67,4 +83,5 @@ public class PokedexService {
                 .types(source.types())
                 .build();
     }
+
 }

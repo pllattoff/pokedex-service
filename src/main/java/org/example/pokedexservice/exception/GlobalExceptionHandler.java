@@ -61,6 +61,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildGenericErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(CollectionEntryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCollectionEntryNotFoundException(CollectionEntryNotFoundException ex) {
+        return buildGenericErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex) {
         return buildGenericErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());

@@ -6,6 +6,8 @@ import org.example.pokedexservice.dto.response.PokedexResponseDto;
 import org.example.pokedexservice.service.PokedexService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class PokedexController {
@@ -19,6 +21,16 @@ public class PokedexController {
     @GetMapping("/pokemon/{name}")
     public PokedexResponseDto getPokemonByName(@PathVariable String name) {
         return service.getPokemonByName(name);
+    }
+
+    @GetMapping("/collection")
+    public List<PokedexResponseDto> getFavorites() {
+        return service.getFavorites();
+    }
+
+    @GetMapping("/collection/{id}")
+    public PokedexResponseDto getFavoritesById(@PathVariable String id) {
+        return service.getFavoriteById(id);
     }
 
     @PostMapping("/collection")
