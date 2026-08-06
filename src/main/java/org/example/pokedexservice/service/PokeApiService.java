@@ -1,8 +1,10 @@
 package org.example.pokedexservice.service;
 
 import org.example.pokedexservice.dto.external.pokeapi.PokeApiResponseDto;
+import org.example.pokedexservice.exception.PokemonNotFoundException;
 import org.example.pokedexservice.model.Pokemon;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
@@ -19,12 +21,17 @@ public class PokeApiService {
     }
 
     public Pokemon getPokemonByName(String name) {
-        PokeApiResponseDto pokeApiResponseDto = restClient.get()
-                .uri("/pokemon/" + name)
-                .retrieve()
-                .body(PokeApiResponseDto.class);
+        try {
+            PokeApiResponseDto pokeApiResponseDto = restClient.get()
+                    .uri("/pokemon/{name}", name)
+                    .retrieve()
+                    .body(PokeApiResponseDto.class);
 
-        return toPokemon(pokeApiResponseDto);
+            return toPokemon(pokeApiResponseDto);
+
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new PokemonNotFoundException("Pokemon not found: " + name);
+        }
     }
 
     private Pokemon toPokemon(PokeApiResponseDto source) {
