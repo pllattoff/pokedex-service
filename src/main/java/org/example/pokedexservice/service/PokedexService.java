@@ -1,6 +1,6 @@
 package org.example.pokedexservice.service;
 
-import org.example.pokedexservice.dto.request.FavoritePokemonDto;
+import org.example.pokedexservice.dto.request.FavoritePokemonRequestDto;
 import org.example.pokedexservice.dto.response.PokedexResponseDto;
 import org.example.pokedexservice.model.FavoritePokemon;
 import org.example.pokedexservice.model.Pokemon;
@@ -26,13 +26,13 @@ public class PokedexService {
         return toPokedexResponseDto(pokemon);
     }
 
-    public PokedexResponseDto addFavorite(FavoritePokemonDto favoritePokemonDto) {
-        Pokemon pokemon = pokeApiService.getPokemonByName(favoritePokemonDto.pokemonName());
+    public PokedexResponseDto addFavorite(FavoritePokemonRequestDto favoritePokemonRequestDto) {
+        Pokemon pokemon = pokeApiService.getPokemonByName(favoritePokemonRequestDto.pokemonName());
 
         FavoritePokemon favoritePokemon = FavoritePokemon.builder()
                 .id(idService.randomId())
                 .pokemonId(pokemon.id())
-                .nickname(favoritePokemonDto.nickname())
+                .nickname(favoritePokemonRequestDto.nickname())
                 .pokemonName(pokemon.name())
                 .pictureUrl(pokemon.pictureUrl())
                 .height(pokemon.height())

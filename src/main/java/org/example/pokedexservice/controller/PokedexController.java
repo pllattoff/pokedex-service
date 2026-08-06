@@ -1,7 +1,7 @@
 package org.example.pokedexservice.controller;
 
 import jakarta.validation.Valid;
-import org.example.pokedexservice.dto.request.FavoritePokemonDto;
+import org.example.pokedexservice.dto.request.FavoritePokemonRequestDto;
 import org.example.pokedexservice.dto.response.PokedexResponseDto;
 import org.example.pokedexservice.service.PokedexService;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +22,8 @@ public class PokedexController {
     }
 
     @PostMapping("/collection")
-    public PokedexResponseDto addFavorite(@RequestBody @Valid FavoritePokemonDto favoritePokemonDto) {
-        return service.addFavorite(favoritePokemonDto);
+    public PokedexResponseDto addFavorite(@RequestBody @Valid FavoritePokemonRequestDto favoritePokemonRequestDto) {
+        return service.addFavorite(favoritePokemonRequestDto);
     }
 
 }
