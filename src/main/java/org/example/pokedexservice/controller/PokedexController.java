@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.example.pokedexservice.dto.request.FavoritePokemonRequestDto;
 import org.example.pokedexservice.dto.response.PokedexResponseDto;
 import org.example.pokedexservice.service.PokedexService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,13 +30,20 @@ public class PokedexController {
     }
 
     @GetMapping("/collection/{id}")
-    public PokedexResponseDto getFavoritesById(@PathVariable String id) {
+    public PokedexResponseDto getFavoriteById(@PathVariable String id) {
         return service.getFavoriteById(id);
     }
 
     @PostMapping("/collection")
+    @ResponseStatus(HttpStatus.CREATED)
     public PokedexResponseDto addFavorite(@RequestBody @Valid FavoritePokemonRequestDto favoritePokemonRequestDto) {
         return service.addFavorite(favoritePokemonRequestDto);
+    }
+
+    @DeleteMapping("/collection/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFavorite(@PathVariable String id) {
+        service.deleteFavorite(id);
     }
 
 }

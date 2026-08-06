@@ -9,6 +9,7 @@ import org.example.pokedexservice.repository.FavoritePokemonRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class PokedexService {
@@ -84,4 +85,10 @@ public class PokedexService {
                 .build();
     }
 
+    public void deleteFavorite(String id) {
+        repository.findById(id)
+                .orElseThrow(() -> new CollectionEntryNotFoundException("Favorite Pokemon not found: " + id));
+
+        repository.deleteById(id);
+    }
 }
