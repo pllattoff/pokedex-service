@@ -6,7 +6,9 @@ import java.util.List;
 
 @Builder
 public record PokedexResponseDto(
+        String id,
         String pokemonId,
+        String nickname,
         String pokemonName,
         String pictureUrl,
         int height,

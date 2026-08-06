@@ -1,11 +1,9 @@
 package org.example.pokedexservice.controller;
 
+import org.example.pokedexservice.dto.request.FavoritePokemonDto;
 import org.example.pokedexservice.dto.response.PokedexResponseDto;
 import org.example.pokedexservice.service.PokedexService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -20,6 +18,11 @@ public class PokedexController {
     @GetMapping("/pokemon/{name}")
     public PokedexResponseDto getPokemonByName(@PathVariable String name) {
         return service.getPokemonByName(name);
+    }
+
+    @PostMapping("/collection")
+    public PokedexResponseDto addFavorite(@RequestBody FavoritePokemonDto favoritePokemonDto) {
+        return service.addFavorite(favoritePokemonDto);
     }
 
 }

@@ -1,43 +1,70 @@
 package org.example.pokedexservice.service;
 
-import org.example.pokedexservice.dto.external.pokeapi.PokeApiResponseDto;
+import org.example.pokedexservice.dto.request.FavoritePokemonDto;
 import org.example.pokedexservice.dto.response.PokedexResponseDto;
+import org.example.pokedexservice.model.FavoritePokemon;
+import org.example.pokedexservice.model.Pokemon;
 import org.example.pokedexservice.repository.FavoritePokemonRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PokedexService {
 
     private final FavoritePokemonRepository repository;
     private final PokeApiService pokeApiService;
+    private final IdService idService;
 
-    public PokedexService(FavoritePokemonRepository repository, PokeApiService pokeApiService) {
+    public PokedexService(FavoritePokemonRepository repository, PokeApiService pokeApiService, IdService idService) {
         this.repository = repository;
         this.pokeApiService = pokeApiService;
+        this.idService = idService;
     }
 
 
     public PokedexResponseDto getPokemonByName(String name) {
-        PokeApiResponseDto pokeApiResponseDto = pokeApiService.getPokemonByName(name);
-        return toPokedexResponseDto(pokeApiResponseDto);
+        Pokemon pokemon = pokeApiService.getPokemonByName(name);
+        return toPokedexResponseDto(pokemon);
     }
 
-    private PokedexResponseDto toPokedexResponseDto(PokeApiResponseDto source) {
-        List<String> typeNames = source.types().stream()
-                .map(t -> t.type().name())
-                .toList();
+    public PokedexResponseDto addFavorite(FavoritePokemonDto favoritePokemonDto) {
+        Pokemon pokemon = pokeApiService.getPokemonByName(favoritePokemonDto.pokemonName());
 
-        String pictureUrl = source.sprites().other().officialArtwork().frontDefault();
+        FavoritePokemon favoritePokemon = FavoritePokemon.builder()
+                .id(idService.randomId())
+                .pokemonId(pokemon.id())
+                .nickname(favoritePokemonDto.nickname())
+                .pokemonName(pokemon.name())
+                .pictureUrl(pokemon.pictureUrl())
+                .height(pokemon.height())
+                .weight(pokemon.weight())
+                .types(pokemon.types())
+                .build();
+        FavoritePokemon saved = repository.save(favoritePokemon);
 
+        return toPokedexResponseDto(saved);
+    }
+
+    private PokedexResponseDto toPokedexResponseDto(Pokemon source) {
         return PokedexResponseDto.builder()
-                .pokemonId(source.id().toString())
+                .pokemonId(source.id())
                 .pokemonName(source.name())
-                .pictureUrl(pictureUrl)
+                .pictureUrl(source.pictureUrl())
                 .height(source.height())
                 .weight(source.weight())
-                .types(typeNames)
+                .types(source.types())
+                .build();
+    }
+
+    private PokedexResponseDto toPokedexResponseDto(FavoritePokemon source) {
+        return PokedexResponseDto.builder()
+                .id(source.id())
+                .pokemonId(source.pokemonId())
+                .nickname(source.nickname())
+                .pokemonName(source.pokemonName())
+                .pictureUrl(source.pictureUrl())
+                .height(source.height())
+                .weight(source.weight())
+                .types(source.types())
                 .build();
     }
 }
