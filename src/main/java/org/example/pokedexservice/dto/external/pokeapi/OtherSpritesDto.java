@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record PokeApiOtherSpritesDto(
+public record OtherSpritesDto(
         @JsonProperty("official-artwork")
-        PokeApiOfficialArtworkDto officialArtwork
+        OfficialArtworkDto officialArtwork
 ) {
 }

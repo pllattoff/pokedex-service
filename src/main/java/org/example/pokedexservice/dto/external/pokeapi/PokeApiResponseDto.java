@@ -10,7 +10,7 @@ public record PokeApiResponseDto(
         String name,
         Integer height,
         Integer weight,
-        List<PokeApiTypeSlotDto> types,
-        PokeApiSpritesDto sprites
+        List<TypeEntryDto> types,
+        SpritesDto sprites
 ) {
 }
