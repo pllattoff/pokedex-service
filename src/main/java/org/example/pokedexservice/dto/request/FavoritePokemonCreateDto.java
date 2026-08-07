@@ -3,7 +3,7 @@ package org.example.pokedexservice.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record FavoritePokemonRequestDto(
+public record FavoritePokemonCreateDto(
         @NotBlank
         String pokemonName,
         @NotBlank

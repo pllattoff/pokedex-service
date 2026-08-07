@@ -1,6 +1,8 @@
 package org.example.pokedexservice.service;
 
-import org.example.pokedexservice.dto.request.FavoritePokemonRequestDto;
+import jakarta.validation.Valid;
+import org.example.pokedexservice.dto.request.FavoritePokemonCreateDto;
+import org.example.pokedexservice.dto.request.FavoritePokemonUpdateDto;
 import org.example.pokedexservice.dto.response.PokedexResponseDto;
 import org.example.pokedexservice.exception.CollectionEntryNotFoundException;
 import org.example.pokedexservice.model.FavoritePokemon;
@@ -42,22 +44,33 @@ public class PokedexService {
         return toPokedexResponseDto(favorite);
     }
 
-    public PokedexResponseDto addFavorite(FavoritePokemonRequestDto favoritePokemonRequestDto) {
-        Pokemon pokemon = pokeApiService.getPokemonByName(favoritePokemonRequestDto.pokemonName());
+    public PokedexResponseDto addFavorite(FavoritePokemonCreateDto favoritePokemonCreateDto) {
+        Pokemon pokemon = pokeApiService.getPokemonByName(favoritePokemonCreateDto.pokemonName());
 
         FavoritePokemon favoritePokemon = FavoritePokemon.builder()
                 .id(idService.randomId())
                 .pokemonId(pokemon.id())
-                .nickname(favoritePokemonRequestDto.nickname())
+                .nickname(favoritePokemonCreateDto.nickname())
                 .pokemonName(pokemon.name())
                 .pictureUrl(pokemon.pictureUrl())
                 .height(pokemon.height())
                 .weight(pokemon.weight())
                 .types(pokemon.types())
                 .build();
-        FavoritePokemon saved = repository.save(favoritePokemon);
+        FavoritePokemon savedFavorite = repository.save(favoritePokemon);
 
-        return toPokedexResponseDto(saved);
+        return toPokedexResponseDto(savedFavorite);
+    }
+
+    public PokedexResponseDto updateFavorite(String id, FavoritePokemonUpdateDto favoritePokemonUpdateDto) {
+        FavoritePokemon existingFavorite = repository.findById(id)
+                .orElseThrow(() -> new CollectionEntryNotFoundException("Favorite Pokemon not found: " + id));
+
+        FavoritePokemon updatedFavorite = repository.save(
+                existingFavorite.withNickname(favoritePokemonUpdateDto.nickname())
+        );
+
+        return toPokedexResponseDto(updatedFavorite);
     }
 
     public void deleteFavorite(String id) {
@@ -90,4 +103,5 @@ public class PokedexService {
                 .types(source.types())
                 .build();
     }
+
 }
